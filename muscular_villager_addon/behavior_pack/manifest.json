@@ -1,0 +1,40 @@
+{
+  "format_version": 2,
+  "header": {
+    "description": "Behaviors for Muscular Villager",
+    "name": "Muscular Villager Addon BP",
+    "uuid": "51325df4-659d-4c78-b8bc-24cd6004ffb6",
+    "version": [
+      1,
+      0,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      16,
+      0
+    ]
+  },
+  "modules": [
+    {
+      "description": "Behavior Pack",
+      "type": "data",
+      "uuid": "e2823282-b2de-48d5-bc91-44304ad98b24",
+      "version": [
+        1,
+        0,
+        0
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "c1a9c800-a2f9-4fef-9dec-51ebfc1f75bc",
+      "version": [
+        1,
+        0,
+        0
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "minecraft:villager_v2",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/villager/villager_muscle"
+      },
+      "geometry": {
+        "default": "geometry.villager_muscle"
+      },
+      "render_controllers": [
+        "controller.render.villager_v2_base"
+      ]
+    }
+  }
+}
