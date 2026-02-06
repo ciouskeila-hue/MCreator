@@ -14,11 +14,21 @@ def get_average_color(texture, uv, size):
     # uv is [u, v] in pixels. size is [w, h, d]
     u, v = uv
     w, h = texture.size
-    if u >= w: u = w - 1
-    if v >= h: v = h - 1
+
+    # UV mapping in bedrock often assumes the texture is folded.
+    # The UV point is the top-left of the box face layout.
+    # To get a representative color, we sample the front face area roughly.
+    # Front face is usually at u + d, v + d
+    d = size[2]
+    sample_u = u + d
+    sample_v = v + d
+
+    # Boundary checks
+    if sample_u >= w: sample_u = w - 1
+    if sample_v >= h: sample_v = h - 1
 
     # Sample a small patch
-    box = (int(u), int(v), int(min(u+4, w)), int(min(v+4, h)))
+    box = (int(sample_u), int(sample_v), int(min(sample_u+4, w)), int(min(sample_v+4, h)))
     try:
         region = texture.crop(box)
         avg = region.resize((1, 1)).getpixel((0, 0))
@@ -40,10 +50,10 @@ def render():
     texture = Image.open(TEX_PATH)
 
     # Setup Figure
-    fig = plt.figure(figsize=(8, 8))
+    fig = plt.figure(figsize=(10, 10))
     ax = fig.add_subplot(111, projection='3d')
-    ax.set_axis_off() # Hide axes
-    ax.set_facecolor('white') # White background
+    ax.set_axis_off()
+    ax.set_facecolor('white')
     fig.patch.set_facecolor('white')
 
     # Parse Geometry
@@ -59,21 +69,20 @@ def render():
 
     bones = model['bones']
 
-    # Calculate bounds to center the camera
     min_x, max_x = 0, 0
     min_y, max_y = 0, 0
     min_z, max_z = 0, 0
 
-    polys = []
+    # We need to accumulate world positions of cubes.
+    # Simplifying assumption: Bone structure is hierarchical but pivots are absolute or relative?
+    # In Bedrock JSON, pivots are absolute world coordinates of the rotation point.
+    # Cubes "origin" is absolute world coordinate of the corner.
+    # So we can just plot cubes by origin.
+    # Hierarchy affects rotation (animation), but for T-pose/Bind-pose, absolute coords work.
 
     for bone in bones:
         if 'cubes' not in bone:
             continue
-
-        # Bone pivot can affect rotation but for simple villager model
-        # usually cubes are positioned absolutely or relative to pivot which is 0-based in some contexts.
-        # Bedrock geometry is tricky. The "origin" is usually absolute in model space.
-        # We will assume origin is absolute for this visualization.
 
         for cube in bone['cubes']:
             origin = cube['origin'] # [x, y, z]
@@ -91,14 +100,9 @@ def render():
             min_z = min(min_z, z)
             max_z = max(max_z, z + dz)
 
-            # Matplotlib Coords:
-            # Bedrock: X=Right, Y=Up, Z=Forward (North)
-            # Matplotlib: X, Y, Z. usually Z is up.
-            # So Bedrock X -> Plot X
-            # Bedrock Y -> Plot Z
-            # Bedrock Z -> Plot Y
+            # Bedrock (x, y, z) -> Matplotlib (x, z, y)
+            # Bedrock Y is UP. Matplotlib Z is UP.
 
-            # Corner points
             p = [
                 [x, z, y],
                 [x+dx, z, y],
@@ -110,7 +114,6 @@ def render():
                 [x, z+dz, y+dy]
             ]
 
-            # Faces
             faces = [
                 [p[0], p[1], p[2], p[3]], # Bottom
                 [p[4], p[5], p[6], p[7]], # Top
@@ -122,29 +125,24 @@ def render():
 
             color = get_average_color(texture, uv, size)
 
-            # Alpha 1.0 for solid look
-            poly3d = Poly3DCollection(faces, linewidths=0.5, edgecolors='none', alpha=1.0)
+            poly3d = Poly3DCollection(faces, linewidths=0.2, edgecolors='k', alpha=1.0)
             poly3d.set_facecolor(color)
-            poly3d.set_edgecolor(color) # Hide edges by making them same color
-            polys.append(poly3d)
             ax.add_collection3d(poly3d)
 
-    # Set limits centered on the model
+    # Center view
     center_x = (min_x + max_x) / 2
-    center_y = (min_z + max_z) / 2 # Bedrock Z is Plot Y
-    center_z = (min_y + max_y) / 2 # Bedrock Y is Plot Z
+    center_y = (min_z + max_z) / 2 # Plot Y = Bedrock Z
+    center_z = (min_y + max_y) / 2 # Plot Z = Bedrock Y
 
-    max_range = max(max_x - min_x, max_z - min_z, max_y - min_y) / 2
+    max_range = max(max_x - min_x, max_z - min_z, max_y - min_y) / 2 * 1.2
 
     ax.set_xlim(center_x - max_range, center_x + max_range)
     ax.set_ylim(center_y - max_range, center_y + max_range)
     ax.set_zlim(center_z - max_range, center_z + max_range)
 
-    # Isometric view
-    ax.view_init(elev=30, azim=-45)
+    ax.view_init(elev=20, azim=-35) # Slightly lower angle to look up at muscles
 
-    # Save
-    plt.savefig(OUT_PATH, bbox_inches='tight', pad_inches=0.1, dpi=150)
+    plt.savefig(OUT_PATH, bbox_inches='tight', pad_inches=0.0, dpi=150)
     print(f"Preview saved to {OUT_PATH}")
 
 if __name__ == "__main__":
