@@ -12,22 +12,17 @@ OUT_PATH = os.path.join(ADDON_DIR, "preview.png")
 
 def get_average_color(texture, uv, size):
     # uv is [u, v] in pixels. size is [w, h, d]
-    # In bedrock, box UV mapping is complex (unfolding).
-    # We will just sample a patch at uv[0], uv[1] of size roughly representative.
-    # UV in JSON is usually top-left of the texture box.
     u, v = uv
-    # Ensure bounds
     w, h = texture.size
     if u >= w: u = w - 1
     if v >= h: v = h - 1
 
-    # Sample a 4x4 patch or smaller
+    # Sample a small patch
     box = (int(u), int(v), int(min(u+4, w)), int(min(v+4, h)))
     try:
         region = texture.crop(box)
-        # resize to 1x1 to get average
         avg = region.resize((1, 1)).getpixel((0, 0))
-        return [x/255.0 for x in avg] # Normalize to 0-1
+        return [x/255.0 for x in avg]
     except:
         return [0.5, 0.5, 0.5, 1.0]
 
@@ -44,11 +39,14 @@ def render():
 
     texture = Image.open(TEX_PATH)
 
-    fig = plt.figure(figsize=(10, 10))
+    # Setup Figure
+    fig = plt.figure(figsize=(8, 8))
     ax = fig.add_subplot(111, projection='3d')
+    ax.set_axis_off() # Hide axes
+    ax.set_facecolor('white') # White background
+    fig.patch.set_facecolor('white')
 
     # Parse Geometry
-    # Looking for geometry.villager_muscle
     model = None
     for g in geo_data['minecraft:geometry']:
         if g['description']['identifier'] == 'geometry.villager_muscle':
@@ -61,21 +59,21 @@ def render():
 
     bones = model['bones']
 
-    # Store cubes to plot
-    # A cube is defined by origin and size.
+    # Calculate bounds to center the camera
+    min_x, max_x = 0, 0
+    min_y, max_y = 0, 0
+    min_z, max_z = 0, 0
 
-    # Set plot limits
-    ax.set_xlim(-20, 20)
-    ax.set_ylim(-20, 20) # Z in bedrock
-    ax.set_zlim(0, 40)   # Y in bedrock
-
-    ax.set_xlabel('X')
-    ax.set_ylabel('Z (Bedrock Z)')
-    ax.set_zlabel('Y (Bedrock Y)')
+    polys = []
 
     for bone in bones:
         if 'cubes' not in bone:
             continue
+
+        # Bone pivot can affect rotation but for simple villager model
+        # usually cubes are positioned absolutely or relative to pivot which is 0-based in some contexts.
+        # Bedrock geometry is tricky. The "origin" is usually absolute in model space.
+        # We will assume origin is absolute for this visualization.
 
         for cube in bone['cubes']:
             origin = cube['origin'] # [x, y, z]
@@ -85,13 +83,20 @@ def render():
             x, y, z = origin
             dx, dy, dz = size
 
-            # Matplotlib coordinates setup
-            # We map Bedrock [x, y, z] to Matplotlib axes.
-            # Usually Matplotlib Z is height. So Bedrock Y -> Plot Z.
-            # Bedrock Z -> Plot Y.
+            # Update bounds
+            min_x = min(min_x, x)
+            max_x = max(max_x, x + dx)
+            min_y = min(min_y, y)
+            max_y = max(max_y, y + dy)
+            min_z = min(min_z, z)
+            max_z = max(max_z, z + dz)
 
-            # Vertices of the cube
-            # origin is bottom-north-west (roughly)
+            # Matplotlib Coords:
+            # Bedrock: X=Right, Y=Up, Z=Forward (North)
+            # Matplotlib: X, Y, Z. usually Z is up.
+            # So Bedrock X -> Plot X
+            # Bedrock Y -> Plot Z
+            # Bedrock Z -> Plot Y
 
             # Corner points
             p = [
@@ -105,11 +110,11 @@ def render():
                 [x, z+dz, y+dy]
             ]
 
-            # Faces defined by indices
+            # Faces
             faces = [
                 [p[0], p[1], p[2], p[3]], # Bottom
                 [p[4], p[5], p[6], p[7]], # Top
-                [p[0], p[1], p[5], p[4]], # Front (ish)
+                [p[0], p[1], p[5], p[4]], # Front
                 [p[2], p[3], p[7], p[6]], # Back
                 [p[1], p[2], p[6], p[5]], # Right
                 [p[4], p[7], p[3], p[0]]  # Left
@@ -117,14 +122,29 @@ def render():
 
             color = get_average_color(texture, uv, size)
 
-            poly3d = Poly3DCollection(faces, linewidths=1, edgecolors='k', alpha=0.9)
+            # Alpha 1.0 for solid look
+            poly3d = Poly3DCollection(faces, linewidths=0.5, edgecolors='none', alpha=1.0)
             poly3d.set_facecolor(color)
+            poly3d.set_edgecolor(color) # Hide edges by making them same color
+            polys.append(poly3d)
             ax.add_collection3d(poly3d)
 
-    # Adjust view
-    ax.view_init(elev=20, azim=45)
+    # Set limits centered on the model
+    center_x = (min_x + max_x) / 2
+    center_y = (min_z + max_z) / 2 # Bedrock Z is Plot Y
+    center_z = (min_y + max_y) / 2 # Bedrock Y is Plot Z
 
-    plt.savefig(OUT_PATH)
+    max_range = max(max_x - min_x, max_z - min_z, max_y - min_y) / 2
+
+    ax.set_xlim(center_x - max_range, center_x + max_range)
+    ax.set_ylim(center_y - max_range, center_y + max_range)
+    ax.set_zlim(center_z - max_range, center_z + max_range)
+
+    # Isometric view
+    ax.view_init(elev=30, azim=-45)
+
+    # Save
+    plt.savefig(OUT_PATH, bbox_inches='tight', pad_inches=0.1, dpi=150)
     print(f"Preview saved to {OUT_PATH}")
 
 if __name__ == "__main__":
