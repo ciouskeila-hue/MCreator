@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft Model & Icons Test</title>
+    <title>Minecraft Muscle Villager</title>
     <style>
         body { font-family: sans-serif; background-color: #333; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
         h1 { margin-bottom: 20px; }
@@ -12,62 +12,107 @@
         img { image-rendering: pixelated; width: 64px; height: 64px; }
 
         /* Minecraft Character (CSS 3D) */
-        .scene { width: 200px; height: 300px; perspective: 600px; margin-top: 50px; }
-        .character { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; animation: rotate 5s infinite linear; }
+        .scene { width: 300px; height: 400px; perspective: 800px; margin-top: 50px; }
+        .character { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; animation: rotate 8s infinite linear; }
         @keyframes rotate { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
 
         .cube { position: absolute; transform-style: preserve-3d; }
-        .face { position: absolute; background-size: cover; image-rendering: pixelated; border: 1px solid rgba(0,0,0,0.2); }
+        .face { position: absolute; background-size: cover; image-rendering: pixelated; border: 1px solid rgba(0,0,0,0.1); box-sizing: border-box; }
 
-        /* Head */
-        .head { width: 64px; height: 64px; top: 20px; left: 68px; transform-origin: center center; }
-        .head .face { width: 64px; height: 64px; background-color: #FAC39C; } /* Skin color */
-        .head .front { transform: translateZ(32px); background-image: url('plugins/mcreator-themes/themes/default_dark/images/mod_preview_bases/entity_base.png'); background-size: contain; background-blend-mode: multiply; background-color: #FAC39C; } /* Use new icon as face texture */
-        .head .back { transform: rotateY(180deg) translateZ(32px); background-color: #3C2E24; } /* Hair */
-        .head .right { transform: rotateY(90deg) translateZ(32px); background-color: #3C2E24; }
-        .head .left { transform: rotateY(-90deg) translateZ(32px); background-color: #3C2E24; }
-        .head .top { transform: rotateX(90deg) translateZ(32px); background-color: #3C2E24; }
-        .head .bottom { transform: rotateX(-90deg) translateZ(32px); background-color: #FAC39C; }
+        /* Colors */
+        :root {
+            --skin: #B58463;
+            --nose: #B58463;
+            --robe: #583A26; /* Brown robe */
+            --pants: #583A26;
+            --arms: #B58463;
+            --eyes: #FFFFFF;
+            --eye-green: #378235;
+            --eyebrow: #633F2E; /* Unibrow */
+        }
 
-        /* Body */
-        .body-torso { width: 64px; height: 96px; top: 84px; left: 68px; }
-        .body-torso .face { width: 64px; height: 96px; background-color: #008CBA; } /* Shirt */
-        .body-torso .front { transform: translateZ(16px); }
-        .body-torso .back { transform: rotateY(180deg) translateZ(16px); }
-        .body-torso .right { transform: rotateY(90deg) translateZ(32px); width: 32px; }
-        .body-torso .left { transform: rotateY(-90deg) translateZ(32px); width: 32px; }
-        .body-torso .top { transform: rotateX(90deg) translateZ(48px); height: 32px; background-color: #FAC39C; } /* Neck */
-        .body-torso .bottom { transform: rotateX(-90deg) translateZ(48px); height: 32px; background-color: #000080; } /* Pants start */
+        /* Head (Standard 8x8x8 -> 64px) */
+        .head { width: 64px; height: 80px; top: 20px; left: 118px; transform-origin: center center; }
+        .head .face { width: 64px; height: 80px; background-color: var(--skin); }
+        .head .front { transform: translateZ(32px); }
+        .head .back { transform: rotateY(180deg) translateZ(32px); }
+        .head .right { transform: rotateY(90deg) translateZ(32px); width: 64px; }
+        .head .left { transform: rotateY(-90deg) translateZ(32px); width: 64px; }
+        .head .top { transform: rotateX(90deg) translateZ(40px); height: 64px; }
+        .head .bottom { transform: rotateX(-90deg) translateZ(40px); height: 64px; }
 
-        /* Arms */
-        .arm { width: 24px; height: 96px; top: 84px; }
-        .arm-left { left: 44px; }
-        .arm-right { left: 132px; }
-        .arm .face { width: 24px; height: 96px; background-color: #FAC39C; } /* Skin */
-        .arm .front { transform: translateZ(12px); }
-        .arm .back { transform: rotateY(180deg) translateZ(12px); }
-        .arm .right { transform: rotateY(90deg) translateZ(12px); width: 24px; }
-        .arm .left { transform: rotateY(-90deg) translateZ(12px); width: 24px; }
-        .arm .top { transform: rotateX(90deg) translateZ(48px); height: 24px; background-color: #008CBA; } /* Shirt shoulder */
-        .arm .bottom { transform: rotateX(-90deg) translateZ(48px); height: 24px; }
+        /* Face Details (CSS Overlay) */
+        .head .front::after {
+            content: ''; position: absolute; top: 20px; left: 12px; width: 40px; height: 4px; background: var(--eyebrow); /* Unibrow */
+            box-shadow:
+                0 8px 0 -12px var(--eyes), /* Left Eye White */
+                28px 8px 0 -12px var(--eyes), /* Right Eye White */
+                4px 8px 0 -14px var(--eye-green), /* Left Pupil */
+                32px 8px 0 -14px var(--eye-green); /* Right Pupil */
+        }
 
-        /* Legs */
-        .leg { width: 32px; height: 96px; top: 180px; }
-        .leg-left { left: 68px; }
-        .leg-right { left: 100px; }
-        .leg .face { width: 32px; height: 96px; background-color: #4B0082; } /* Pants */
+        /* Nose (4x8x4 -> 16x32x16) */
+        .nose { width: 16px; height: 32px; top: 56px; left: 142px; transform-origin: center center; }
+        .nose .face { width: 16px; height: 32px; background-color: var(--nose); }
+        .nose .front { transform: translateZ(40px); } /* Extends from head (+8px) */
+        .nose .back { transform: rotateY(180deg) translateZ(8px); display: none; } /* hidden inside head */
+        .nose .right { transform: rotateY(90deg) translateZ(8px); width: 16px; }
+        .nose .left { transform: rotateY(-90deg) translateZ(8px); width: 16px; }
+        .nose .top { transform: rotateX(90deg) translateZ(16px); height: 16px; }
+        .nose .bottom { transform: rotateX(-90deg) translateZ(16px); height: 16px; }
+
+
+        /* Body (Standard 8x12x4 -> 64x96x32) */
+        /* Muscle Villager Body: Wider Chest (12x12x6 -> 96x96x48) */
+        .body-torso { width: 96px; height: 96px; top: 100px; left: 102px; }
+        .body-torso .face { width: 96px; height: 96px; background-color: var(--robe); }
+        .body-torso .front { transform: translateZ(24px); }
+        .body-torso .back { transform: rotateY(180deg) translateZ(24px); }
+        .body-torso .right { transform: rotateY(90deg) translateZ(48px); width: 48px; }
+        .body-torso .left { transform: rotateY(-90deg) translateZ(48px); width: 48px; }
+        .body-torso .top { transform: rotateX(90deg) translateZ(48px); height: 48px; }
+        .body-torso .bottom { transform: rotateX(-90deg) translateZ(48px); height: 48px; }
+
+        /* Robe Detail */
+        .body-torso .front::after {
+            content: ''; position: absolute; top: 0; left: 40px; width: 16px; height: 96px; background: rgba(0,0,0,0.1);
+        }
+
+        /* Arms (Muscle Arms: 6x12x6 -> 48x96x48) - Typically arms are 4x12x4 */
+        .arm { width: 48px; height: 96px; top: 100px; }
+        .arm-left { left: 48px; } /* Offset for wider body */
+        .arm-right { left: 204px; }
+        .arm .face { width: 48px; height: 96px; background-color: var(--skin); } /* Skin */
+        .arm .front { transform: translateZ(24px); }
+        .arm .back { transform: rotateY(180deg) translateZ(24px); }
+        .arm .right { transform: rotateY(90deg) translateZ(24px); width: 48px; }
+        .arm .left { transform: rotateY(-90deg) translateZ(24px); width: 48px; }
+        .arm .top { transform: rotateX(90deg) translateZ(48px); height: 48px; background-color: var(--robe); } /* Robe shoulder */
+        .arm .bottom { transform: rotateX(-90deg) translateZ(48px); height: 48px; }
+
+        /* Legs (Standard 4x12x4 -> 32x96x32) */
+        .leg { width: 32px; height: 96px; top: 196px; }
+        .leg-left { left: 118px; }
+        .leg-right { left: 150px; }
+        .leg .face { width: 32px; height: 96px; background-color: var(--robe); }
         .leg .front { transform: translateZ(16px); }
         .leg .back { transform: rotateY(180deg) translateZ(16px); }
         .leg .right { transform: rotateY(90deg) translateZ(16px); width: 32px; }
         .leg .left { transform: rotateY(-90deg) translateZ(16px); width: 32px; }
-        .leg .top { transform: rotateX(90deg) translateZ(48px); height: 32px; background-color: #000080; }
+        .leg .top { transform: rotateX(90deg) translateZ(48px); height: 32px; }
         .leg .bottom { transform: rotateX(-90deg) translateZ(48px); height: 32px; background-color: #333; } /* Shoes */
+
+        /* Flexing Animation (optional) */
+        /*
+        .arm-left { transform-origin: top right; transform: rotateZ(20deg); }
+        .arm-right { transform-origin: top left; transform: rotateZ(-20deg); }
+        */
 
     </style>
 </head>
 <body>
 
-    <h1>Improved Icons Test</h1>
+    <h1>Muscle Villager Model</h1>
     <div class="icon-container">
         <div class="icon-wrapper">
             <p>Entity Base</p>
@@ -79,13 +124,20 @@
         </div>
     </div>
 
-    <h1>HTML Minecraft Model</h1>
     <div class="scene">
         <div class="character">
             <!-- Head -->
             <div class="cube head">
                 <div class="face front"></div>
                 <div class="face back"></div>
+                <div class="face right"></div>
+                <div class="face left"></div>
+                <div class="face top"></div>
+                <div class="face bottom"></div>
+            </div>
+            <!-- Nose -->
+            <div class="cube nose">
+                <div class="face front"></div>
                 <div class="face right"></div>
                 <div class="face left"></div>
                 <div class="face top"></div>
@@ -100,7 +152,7 @@
                 <div class="face top"></div>
                 <div class="face bottom"></div>
             </div>
-            <!-- Left Arm -->
+            <!-- Left Arm (Muscle) -->
             <div class="cube arm arm-left">
                 <div class="face front"></div>
                 <div class="face back"></div>
@@ -109,7 +161,7 @@
                 <div class="face top"></div>
                 <div class="face bottom"></div>
             </div>
-            <!-- Right Arm -->
+            <!-- Right Arm (Muscle) -->
             <div class="cube arm arm-right">
                 <div class="face front"></div>
                 <div class="face back"></div>
