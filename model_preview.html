@@ -3,98 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft Muscle Villager</title>
+    <title>Abstract Muscle Villager</title>
     <style>
-        body { font-family: sans-serif; background-color: #333; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-        h1 { margin-bottom: 20px; }
+        body { font-family: sans-serif; background-color: #333; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; overflow: hidden; }
+        h1 { margin-bottom: 20px; font-size: 2em; text-transform: uppercase; letter-spacing: 5px; color: #FF5555; text-shadow: 2px 2px #000; animation: shake 0.5s infinite; }
+        @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
+
         .icon-container { display: flex; gap: 20px; margin-bottom: 40px; }
         .icon-wrapper { text-align: center; border: 1px solid #555; padding: 10px; border-radius: 5px; background: #444; }
         img { image-rendering: pixelated; width: 64px; height: 64px; }
 
         /* Minecraft Character (CSS 3D) */
-        .scene { width: 300px; height: 400px; perspective: 800px; margin-top: 50px; }
-        .character { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; animation: rotate 8s infinite linear; }
+        .scene { width: 400px; height: 500px; perspective: 1000px; margin-top: 50px; }
+        .character { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; animation: rotate 4s infinite linear, bounce 0.5s infinite alternate; }
         @keyframes rotate { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+        @keyframes bounce { from { top: 0; } to { top: -20px; } }
 
         .cube { position: absolute; transform-style: preserve-3d; }
-        .face { position: absolute; background-size: 100% 100%; image-rendering: pixelated; border: 1px solid rgba(0,0,0,0.05); }
+        .face { position: absolute; background-size: 100% 100%; image-rendering: pixelated; border: 1px solid rgba(0,0,0,0.1); }
 
-        /* Head (Standard 8x8x8 -> 64px) */
-        .head { width: 64px; height: 64px; top: 20px; left: 118px; transform-origin: center center; }
-        .head .face { width: 64px; height: 64px; background-color: #B58463; }
-        .head .front { transform: translateZ(32px); background-image: url('texture_face.png'); }
-        .head .back { transform: rotateY(180deg) translateZ(32px); background-color: #583A26; } /* Hair/Robe hood */
-        .head .right { transform: rotateY(90deg) translateZ(32px); width: 64px; background-color: #B58463; }
-        .head .left { transform: rotateY(-90deg) translateZ(32px); width: 64px; background-color: #B58463; }
-        .head .top { transform: rotateX(90deg) translateZ(32px); height: 64px; background-color: #583A26; }
-        .head .bottom { transform: rotateX(-90deg) translateZ(32px); height: 64px; }
+        /* Abstract Proportions */
 
-        /* Nose (16x32) */
-        .nose { width: 16px; height: 32px; top: 52px; left: 142px; transform-origin: center center; }
-        .nose .face { width: 16px; height: 32px; background-color: #B58463; }
-        .nose .front { transform: translateZ(40px); background-image: url('texture_nose.png'); }
-        .nose .right { transform: rotateY(90deg) translateZ(8px); width: 16px; background-image: url('texture_nose.png'); }
-        .nose .left { transform: rotateY(-90deg) translateZ(8px); width: 16px; background-image: url('texture_nose.png'); }
-        .nose .top { transform: rotateX(90deg) translateZ(16px); height: 16px; background-color: #B58463; }
-        .nose .bottom { transform: rotateX(-90deg) translateZ(16px); height: 16px; background-color: #8C644B; } /* Darker bottom */
+        /* TINY HEAD (0.5x scale -> 32px) */
+        .head { width: 32px; height: 32px; top: -10px; left: 184px; transform-origin: center center; }
+        .head .face { width: 32px; height: 32px; background-color: #B58463; }
+        .head .front { transform: translateZ(16px); background-image: url('texture_face_abstract.png'); }
+        .head .back { transform: rotateY(180deg) translateZ(16px); background-color: #583A26; }
+        .head .right { transform: rotateY(90deg) translateZ(16px); width: 32px; background-color: #B58463; }
+        .head .left { transform: rotateY(-90deg) translateZ(16px); width: 32px; background-color: #B58463; }
+        .head .top { transform: rotateX(90deg) translateZ(16px); height: 32px; background-color: #583A26; }
+        .head .bottom { transform: rotateX(-90deg) translateZ(16px); height: 32px; }
 
-
-        /* Body (Wider Chest: 96x96x48) */
-        .body-torso { width: 96px; height: 96px; top: 84px; left: 102px; }
-        .body-torso .face { width: 96px; height: 96px; background-color: #583A26; }
-        .body-torso .front { transform: translateZ(24px); background-image: url('texture_torso.png'); }
-        .body-torso .back { transform: rotateY(180deg) translateZ(24px); background-image: url('texture_torso.png'); }
-        .body-torso .right { transform: rotateY(90deg) translateZ(48px); width: 48px; background-color: #583A26; }
-        .body-torso .left { transform: rotateY(-90deg) translateZ(48px); width: 48px; background-color: #583A26; }
-        .body-torso .top { transform: rotateX(90deg) translateZ(48px); height: 48px; background-color: #583A26; }
-        .body-torso .bottom { transform: rotateX(-90deg) translateZ(48px); height: 48px; background-color: #583A26; }
+        /* Nose (Scaled down to fit tiny head) */
+        .nose { width: 8px; height: 16px; top: 6px; left: 196px; transform-origin: center center; }
+        .nose .face { width: 8px; height: 16px; background-color: #B58463; }
+        .nose .front { transform: translateZ(20px); background-image: url('texture_nose_abstract.png'); }
+        .nose .right { transform: rotateY(90deg) translateZ(4px); width: 8px; background-image: url('texture_nose_abstract.png'); }
+        .nose .left { transform: rotateY(-90deg) translateZ(4px); width: 8px; background-image: url('texture_nose_abstract.png'); }
+        .nose .top { transform: rotateX(90deg) translateZ(8px); height: 8px; }
+        .nose .bottom { transform: rotateX(-90deg) translateZ(8px); height: 8px; }
 
 
-        /* Arms (Muscle Arms: 48x96x48) */
-        .arm { width: 48px; height: 96px; top: 84px; }
-        .arm-left { left: 48px; } /* Slightly detached for muscle look */
-        .arm-right { left: 204px; }
-        .arm .face { width: 48px; height: 96px; background-color: #B58463; } /* Skin */
-        .arm .front { transform: translateZ(24px); background-image: url('texture_arm.png'); }
-        .arm .back { transform: rotateY(180deg) translateZ(24px); background-image: url('texture_arm.png'); }
-        .arm .right { transform: rotateY(90deg) translateZ(24px); width: 48px; background-image: url('texture_arm.png'); }
-        .arm .left { transform: rotateY(-90deg) translateZ(24px); width: 48px; background-image: url('texture_arm.png'); }
-        .arm .top { transform: rotateX(90deg) translateZ(48px); height: 48px; background-color: #583A26; } /* Shoulder */
-        .arm .bottom { transform: rotateX(-90deg) translateZ(48px); height: 48px; background-color: #B58463; }
+        /* GIGACHAD TORSO (2x Width -> 192px width, Tapered to waist look via CSS trick? No, just huge block) */
+        .body-torso { width: 192px; height: 96px; top: 22px; left: 104px; }
+        .body-torso .face { width: 192px; height: 96px; background-color: #583A26; }
+        .body-torso .front { transform: translateZ(24px); background-image: url('texture_torso_abstract.png'); }
+        .body-torso .back { transform: rotateY(180deg) translateZ(24px); background-image: url('texture_torso_abstract.png'); }
+        .body-torso .right { transform: rotateY(90deg) translateZ(96px); width: 48px; background-color: #583A26; }
+        .body-torso .left { transform: rotateY(-90deg) translateZ(96px); width: 48px; background-color: #583A26; }
+        .body-torso .top { transform: rotateX(90deg) translateZ(48px); height: 48px; width: 192px; background-color: #583A26; }
+        .body-torso .bottom { transform: rotateX(-90deg) translateZ(48px); height: 48px; width: 192px; background-color: #583A26; }
 
-        /* Legs (32x96x32) */
-        .leg { width: 32px; height: 96px; top: 180px; }
-        .leg-left { left: 118px; }
-        .leg-right { left: 150px; }
-        .leg .face { width: 32px; height: 96px; background-color: #583A26; }
-        .leg .front { transform: translateZ(16px); background-image: url('texture_leg.png'); }
-        .leg .back { transform: rotateY(180deg) translateZ(16px); background-image: url('texture_leg.png'); }
-        .leg .right { transform: rotateY(90deg) translateZ(16px); width: 32px; background-image: url('texture_leg.png'); }
-        .leg .left { transform: rotateY(-90deg) translateZ(16px); width: 32px; background-image: url('texture_leg.png'); }
-        .leg .top { transform: rotateX(90deg) translateZ(48px); height: 32px; background-color: #583A26; }
-        .leg .bottom { transform: rotateX(-90deg) translateZ(48px); height: 32px; background-color: #333; } /* Shoes */
 
-        /* Lighting/Shading */
-        .face { filter: brightness(0.9); }
-        .top { filter: brightness(1.1); }
-        .bottom { filter: brightness(0.6); }
-        .right, .left { filter: brightness(0.8); }
+        /* MASSIVE ARMS (1.5x Thickness -> 72px width, Length -> 120px) */
+        .arm { width: 72px; height: 120px; top: 22px; }
+        .arm-left { left: 20px; animation: flexLeft 1s infinite alternate; }
+        .arm-right { left: 308px; animation: flexRight 1s infinite alternate; }
+
+        @keyframes flexLeft { from { transform: rotateZ(10deg); } to { transform: rotateZ(30deg) translate(-10px, -20px); } }
+        @keyframes flexRight { from { transform: rotateZ(-10deg); } to { transform: rotateZ(-30deg) translate(10px, -20px); } }
+
+        .arm .face { width: 72px; height: 120px; background-color: #B58463; }
+        .arm .front { transform: translateZ(36px); background-image: url('texture_arm_abstract.png'); }
+        .arm .back { transform: rotateY(180deg) translateZ(36px); background-image: url('texture_arm_abstract.png'); }
+        .arm .right { transform: rotateY(90deg) translateZ(36px); width: 72px; background-image: url('texture_arm_abstract.png'); }
+        .arm .left { transform: rotateY(-90deg) translateZ(36px); width: 72px; background-image: url('texture_arm_abstract.png'); }
+        .arm .top { transform: rotateX(90deg) translateZ(60px); height: 72px; width: 72px; background-color: #583A26; }
+        .arm .bottom { transform: rotateX(-90deg) translateZ(60px); height: 72px; width: 72px; }
+
+        /* CHICKEN LEGS (0.5x Width -> 16px width each, Short) */
+        .leg { width: 16px; height: 64px; top: 118px; }
+        .leg-left { left: 160px; }
+        .leg-right { left: 224px; }
+        .leg .face { width: 16px; height: 64px; background-color: #583A26; }
+        .leg .front { transform: translateZ(8px); background-image: url('texture_leg_abstract.png'); }
+        .leg .back { transform: rotateY(180deg) translateZ(8px); background-image: url('texture_leg_abstract.png'); }
+        .leg .right { transform: rotateY(90deg) translateZ(8px); width: 16px; background-image: url('texture_leg_abstract.png'); }
+        .leg .left { transform: rotateY(-90deg) translateZ(8px); width: 16px; background-image: url('texture_leg_abstract.png'); }
+        .leg .top { transform: rotateX(90deg) translateZ(32px); height: 16px; width: 16px; }
+        .leg .bottom { transform: rotateX(-90deg) translateZ(32px); height: 16px; width: 16px; background-color: #333; }
 
     </style>
 </head>
 <body>
 
-    <h1>Muscle Villager (High Quality Textures)</h1>
-    <div class="icon-container">
-        <div class="icon-wrapper">
-            <p>Entity Base</p>
-            <img src="plugins/mcreator-themes/themes/default_dark/images/mod_preview_bases/entity_base.png" alt="Entity Base">
-        </div>
-        <div class="icon-wrapper">
-            <p>Built-in Model</p>
-            <img src="plugins/mcreator-themes/themes/default_dark/images/model/small_builtin.png" alt="Built-in Model">
-        </div>
-    </div>
+    <h1>ABSTRACT MUSCLE VILLAGER</h1>
 
     <div class="scene">
         <div class="character">
