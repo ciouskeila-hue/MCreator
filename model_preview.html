@@ -27,7 +27,7 @@
         /* TINY HEAD (0.5x scale -> 32px) */
         .head { width: 32px; height: 32px; top: -10px; left: 184px; transform-origin: center center; }
         .head .face { width: 32px; height: 32px; background-color: #B58463; }
-        .head .front { transform: translateZ(16px); background-image: url('texture_face_abstract.png'); }
+        .head .front { transform: translateZ(16px); background-image: url('texture_face.png'); }
         .head .back { transform: rotateY(180deg) translateZ(16px); background-color: #583A26; }
         .head .right { transform: rotateY(90deg) translateZ(16px); width: 32px; background-color: #B58463; }
         .head .left { transform: rotateY(-90deg) translateZ(16px); width: 32px; background-color: #B58463; }
@@ -37,9 +37,9 @@
         /* Nose (Scaled down to fit tiny head) */
         .nose { width: 8px; height: 16px; top: 6px; left: 196px; transform-origin: center center; }
         .nose .face { width: 8px; height: 16px; background-color: #B58463; }
-        .nose .front { transform: translateZ(20px); background-image: url('texture_nose_abstract.png'); }
-        .nose .right { transform: rotateY(90deg) translateZ(4px); width: 8px; background-image: url('texture_nose_abstract.png'); }
-        .nose .left { transform: rotateY(-90deg) translateZ(4px); width: 8px; background-image: url('texture_nose_abstract.png'); }
+        .nose .front { transform: translateZ(20px); background-image: url('texture_nose.png'); }
+        .nose .right { transform: rotateY(90deg) translateZ(4px); width: 8px; background-image: url('texture_nose.png'); }
+        .nose .left { transform: rotateY(-90deg) translateZ(4px); width: 8px; background-image: url('texture_nose.png'); }
         .nose .top { transform: rotateX(90deg) translateZ(8px); height: 8px; }
         .nose .bottom { transform: rotateX(-90deg) translateZ(8px); height: 8px; }
 
@@ -47,8 +47,8 @@
         /* GIGACHAD TORSO (2x Width -> 192px width, Tapered to waist look via CSS trick? No, just huge block) */
         .body-torso { width: 192px; height: 96px; top: 22px; left: 104px; }
         .body-torso .face { width: 192px; height: 96px; background-color: #583A26; }
-        .body-torso .front { transform: translateZ(24px); background-image: url('texture_torso_abstract.png'); }
-        .body-torso .back { transform: rotateY(180deg) translateZ(24px); background-image: url('texture_torso_abstract.png'); }
+        .body-torso .front { transform: translateZ(24px); background-image: url('texture_torso.png'); }
+        .body-torso .back { transform: rotateY(180deg) translateZ(24px); background-image: url('texture_torso.png'); }
         .body-torso .right { transform: rotateY(90deg) translateZ(96px); width: 48px; background-color: #583A26; }
         .body-torso .left { transform: rotateY(-90deg) translateZ(96px); width: 48px; background-color: #583A26; }
         .body-torso .top { transform: rotateX(90deg) translateZ(48px); height: 48px; width: 192px; background-color: #583A26; }
@@ -64,10 +64,10 @@
         @keyframes flexRight { from { transform: rotateZ(-10deg); } to { transform: rotateZ(-30deg) translate(10px, -20px); } }
 
         .arm .face { width: 72px; height: 120px; background-color: #B58463; }
-        .arm .front { transform: translateZ(36px); background-image: url('texture_arm_abstract.png'); }
-        .arm .back { transform: rotateY(180deg) translateZ(36px); background-image: url('texture_arm_abstract.png'); }
-        .arm .right { transform: rotateY(90deg) translateZ(36px); width: 72px; background-image: url('texture_arm_abstract.png'); }
-        .arm .left { transform: rotateY(-90deg) translateZ(36px); width: 72px; background-image: url('texture_arm_abstract.png'); }
+        .arm .front { transform: translateZ(36px); background-image: url('texture_arm.png'); }
+        .arm .back { transform: rotateY(180deg) translateZ(36px); background-image: url('texture_arm.png'); }
+        .arm .right { transform: rotateY(90deg) translateZ(36px); width: 72px; background-image: url('texture_arm.png'); }
+        .arm .left { transform: rotateY(-90deg) translateZ(36px); width: 72px; background-image: url('texture_arm.png'); }
         .arm .top { transform: rotateX(90deg) translateZ(60px); height: 72px; width: 72px; background-color: #583A26; }
         .arm .bottom { transform: rotateX(-90deg) translateZ(60px); height: 72px; width: 72px; }
 
@@ -76,10 +76,10 @@
         .leg-left { left: 160px; }
         .leg-right { left: 224px; }
         .leg .face { width: 16px; height: 64px; background-color: #583A26; }
-        .leg .front { transform: translateZ(8px); background-image: url('texture_leg_abstract.png'); }
-        .leg .back { transform: rotateY(180deg) translateZ(8px); background-image: url('texture_leg_abstract.png'); }
-        .leg .right { transform: rotateY(90deg) translateZ(8px); width: 16px; background-image: url('texture_leg_abstract.png'); }
-        .leg .left { transform: rotateY(-90deg) translateZ(8px); width: 16px; background-image: url('texture_leg_abstract.png'); }
+        .leg .front { transform: translateZ(8px); background-image: url('texture_leg.png'); }
+        .leg .back { transform: rotateY(180deg) translateZ(8px); background-image: url('texture_leg.png'); }
+        .leg .right { transform: rotateY(90deg) translateZ(8px); width: 16px; background-image: url('texture_leg.png'); }
+        .leg .left { transform: rotateY(-90deg) translateZ(8px); width: 16px; background-image: url('texture_leg.png'); }
         .leg .top { transform: rotateX(90deg) translateZ(32px); height: 16px; width: 16px; }
         .leg .bottom { transform: rotateX(-90deg) translateZ(32px); height: 16px; width: 16px; background-color: #333; }
 
