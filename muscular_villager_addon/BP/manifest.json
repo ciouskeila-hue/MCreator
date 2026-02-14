@@ -3,7 +3,7 @@
     "header": {
         "name": "Muscular Villager BP",
         "description": "Behavior Pack for Muscular Villager",
-        "uuid": "40b5542a-619d-4189-ab06-e712c70bf0da",
+        "uuid": "b2e4c001-a7d3-40cf-9f4a-1065c9f0ac6b",
         "version": [
             1,
             0,
@@ -18,7 +18,7 @@
     "modules": [
         {
             "type": "data",
-            "uuid": "e7cf3da6-4776-4cfc-939c-0686dad7fef6",
+            "uuid": "13502489-5609-497f-8a2c-2d1bb40d8e4d",
             "version": [
                 1,
                 0,
@@ -28,7 +28,7 @@
         {
             "type": "script",
             "language": "javascript",
-            "uuid": "894021d4-c93f-48fa-95de-7f052874f4fe",
+            "uuid": "450ffd35-2555-4013-b9b9-7288626624ca",
             "entry": "scripts/server/index.js",
             "version": [
                 1,
@@ -39,7 +39,7 @@
     ],
     "dependencies": [
         {
-            "uuid": "64c0d8d2-063f-42ac-b0bf-fcf516c93037",
+            "uuid": "e24ac4da-f264-465b-b5e1-e194b8ce65d6",
             "version": [
                 1,
                 0,
