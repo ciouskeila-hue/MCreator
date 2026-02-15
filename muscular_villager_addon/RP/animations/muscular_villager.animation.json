@@ -1,0 +1,121 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.muscular_villager.idle": {
+      "loop": true,
+      "bones": {
+        "rightArm": {
+          "rotation": [
+            "math.cos(query.life_time * 200) * 2.0",
+            0,
+            "math.cos(query.life_time * 200) * 2.0 + 5"
+          ]
+        },
+        "leftArm": {
+          "rotation": [
+            "math.cos(query.life_time * 200) * 2.0",
+            0,
+            "-math.cos(query.life_time * 200) * 2.0 - 5"
+          ]
+        }
+      }
+    },
+    "animation.muscular_villager.walk": {
+      "loop": true,
+      "anim_time_update": "query.modified_distance_moved",
+      "bones": {
+        "rightLeg": {
+          "rotation": [
+            "math.cos(query.anim_time * 30.0) * 40.0",
+            0,
+            0
+          ]
+        },
+        "leftLeg": {
+          "rotation": [
+            "math.cos(query.anim_time * 30.0 + 180) * 40.0",
+            0,
+            0
+          ]
+        },
+        "rightArm": {
+          "rotation": [
+            "math.cos(query.anim_time * 30.0 + 180) * 40.0",
+            0,
+            0
+          ]
+        },
+        "leftArm": {
+          "rotation": [
+            "math.cos(query.anim_time * 30.0) * 40.0",
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "animation.muscular_villager.lift": {
+      "loop": true,
+      "bones": {
+        "rightArm": {
+          "rotation": [
+            -160,
+            0,
+            0
+          ]
+        },
+        "leftArm": {
+          "rotation": [
+            -160,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "animation.muscular_villager.throw": {
+      "loop": "hold_on_last_frame",
+      "animation_length": 0.5,
+      "bones": {
+        "rightArm": {
+          "rotation": {
+            "0.0": [
+              -160,
+              0,
+              0
+            ],
+            "0.2": [
+              45,
+              0,
+              0
+            ],
+            "0.5": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "leftArm": {
+          "rotation": {
+            "0.0": [
+              -160,
+              0,
+              0
+            ],
+            "0.2": [
+              45,
+              0,
+              0
+            ],
+            "0.5": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      }
+    }
+  }
+}
