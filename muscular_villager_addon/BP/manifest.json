@@ -1,0 +1,56 @@
+{
+  "format_version": 2,
+  "header": {
+    "description": "Muscular Villager Behavior Pack",
+    "name": "Muscular Villager BP",
+    "uuid": "3c698ab1-d502-44af-a876-b2d2d7ffd1b9",
+    "version": [
+      1,
+      0,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      19,
+      0
+    ]
+  },
+  "modules": [
+    {
+      "description": "Muscular Villager Behaviors",
+      "type": "data",
+      "uuid": "7a0f8555-e15c-48dc-a4cd-7953fab91976",
+      "version": [
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "description": "Muscular Villager Scripts",
+      "type": "script",
+      "language": "javascript",
+      "uuid": "ea517e49-9a81-4ec4-80b0-c7b699535e75",
+      "version": [
+        1,
+        0,
+        0
+      ],
+      "entry": "scripts/main.js"
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "f2166e18-3777-44ad-b7c5-92caa27fb28f",
+      "version": [
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "module_name": "@minecraft/server",
+                "version": "1.9.0"
+    }
+  ]
+}
