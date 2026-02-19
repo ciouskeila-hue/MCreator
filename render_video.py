@@ -19,10 +19,10 @@ except ImportError:
 # ==========================================
 # CONFIGURATION
 # ==========================================
-WIDTH, HEIGHT = 1920, 1080
+WIDTH, HEIGHT = 3840, 2160
 FPS = 60
 DURATION = 4
-OUTPUT_FILE = "kimi_vs_gemini.mp4"
+OUTPUT_FILE = "kimi_vs_gemini_4k.mp4"
 
 # Fonts: List of candidates for cross-platform compatibility
 FONT_CANDIDATES = [
@@ -94,10 +94,10 @@ for f in FONT_CANDIDATES:
 
 try:
     if font_path:
-        font_large = ImageFont.truetype(font_path, 90)
-        font_medium = ImageFont.truetype(font_path, 40)
-        font_small = ImageFont.truetype(font_path, 20)
-        font_vs = ImageFont.truetype(font_path, 150)
+        font_large = ImageFont.truetype(font_path, 180)
+        font_medium = ImageFont.truetype(font_path, 80)
+        font_small = ImageFont.truetype(font_path, 40)
+        font_vs = ImageFont.truetype(font_path, 300)
     else:
         # Fallback to default if none found
         raise IOError("No font found")
@@ -117,9 +117,9 @@ class Particle:
         self.h = h
         self.x = random.random() * w
         self.y = random.random() * h
-        self.vx = (random.random() - 0.5) * 0.5
-        self.vy = (random.random() - 0.5) * 0.5
-        self.size = random.random() * 2
+        self.vx = (random.random() - 0.5) * 1.0 # Faster for 4k
+        self.vy = (random.random() - 0.5) * 1.0
+        self.size = random.random() * 4 # Larger for 4k
         self.color = KIMI_COLOR if random.random() > 0.5 else GEMINI_COLOR
         self.alpha = 0.5
 
@@ -134,7 +134,7 @@ class Particle:
         draw.ellipse([self.x - self.size, self.y - self.size,
                       self.x + self.size, self.y + self.size], fill=fill)
 
-particles = [Particle(WIDTH, HEIGHT) for _ in range(40)]
+particles = [Particle(WIDTH, HEIGHT) for _ in range(80)]
 
 # ==========================================
 # HELPERS
@@ -184,7 +184,8 @@ def draw_tech_lines(draw, w, h):
 # RENDER FRAME
 # ==========================================
 def make_frame(t):
-    frame = bg_base.copy()
+    # Convert to RGBA for proper alpha blending of draw operations
+    frame = bg_base.copy().convert("RGBA")
 
     draw = ImageDraw.Draw(frame, "RGBA")
     draw_grid(draw, WIDTH, HEIGHT)
@@ -208,14 +209,13 @@ def make_frame(t):
             dy = p.y - p2.y
             dist = math.sqrt(dx*dx + dy*dy)
 
-            if dist < 100:
-                # Opacity: 0.1 - dist/1000.  Max dist=100 => 0.1 - 0.1 = 0.  Min dist=0 => 0.1.
-                # In 0-255 scale: 25.5 max.
-                alpha = max(0, 0.1 - dist/1000)
+            if dist < 200: # Increase connection distance for 4k
+                # Opacity: 0.1 - dist/2000.
+                alpha = max(0, 0.1 - dist/2000)
                 if alpha > 0:
                     alpha_int = int(255 * alpha)
                     if alpha_int > 0:
-                        draw.line([(p.x, p.y), (p2.x, p2.y)], fill=(255, 255, 255, alpha_int), width=1)
+                        draw.line([(p.x, p.y), (p2.x, p2.y)], fill=(255, 255, 255, alpha_int), width=2)
 
     # --- KIMI (Left) ---
     kimi_start = 0.5
@@ -223,15 +223,15 @@ def make_frame(t):
         progress = min((t - kimi_start) / 1.2, 1)
         eased = ease_out_cubic(progress)
         alpha = int(255 * eased)
-        offset_x = -100 * (1 - eased)
-        logo_size = 140
+        offset_x = -200 * (1 - eased) # Scale movement
+        logo_size = 280 # Scale logo
         lx = WIDTH * 0.25 + offset_x - logo_size/2
-        ly = HEIGHT/2 - logo_size/2 - 40
+        ly = HEIGHT/2 - logo_size/2 - 80 # Scale Y offset
 
         if alpha > 0:
             glow_intensity = int(76 + 76 * math.sin(t * 2))
             glow_color = (45, 212, 191, glow_intensity)
-            draw.rounded_rectangle([lx-5, ly-5, lx+logo_size+5, ly+logo_size+5], radius=24, fill=None, outline=glow_color, width=2)
+            draw.rounded_rectangle([lx-10, ly-10, lx+logo_size+10, ly+logo_size+10], radius=48, fill=None, outline=glow_color, width=4)
 
             k_logo = kimi_img_orig.resize((logo_size, logo_size), Image.Resampling.LANCZOS)
             if alpha < 255:
@@ -239,7 +239,7 @@ def make_frame(t):
             frame.paste(k_logo, (int(lx), int(ly)), k_logo)
 
             txt_x = WIDTH * 0.25 + offset_x
-            txt_y = ly + logo_size + 80
+            txt_y = ly + logo_size + 160 # Scale text offset
             def draw_text_centered(txt, x, y, font, fill):
                 bbox = draw.textbbox((0, 0), txt, font=font)
                 w = bbox[2] - bbox[0]
@@ -247,7 +247,7 @@ def make_frame(t):
 
             draw_text_centered("Kimi", txt_x, txt_y, font_large, (45, 212, 191, int(128 * eased)))
             draw_text_centered("Kimi", txt_x, txt_y, font_large, (248, 250, 252, alpha))
-            draw_text_centered("MOONSHOT AI", txt_x, ly + logo_size + 180, font_small, (45, 212, 191, int(180 * eased)))
+            draw_text_centered("MOONSHOT AI", txt_x, ly + logo_size + 360, font_small, (45, 212, 191, int(180 * eased)))
 
     # --- GEMINI (Right) ---
     gemini_start = 0.8
@@ -255,11 +255,11 @@ def make_frame(t):
         progress = min((t - gemini_start) / 1.2, 1)
         eased = ease_out_cubic(progress)
         alpha = int(255 * eased)
-        offset_x = 100 * (1 - eased)
-        float_y = -15 * math.sin(t * 2)
-        logo_size = 140
+        offset_x = 200 * (1 - eased) # Scale movement
+        float_y = -30 * math.sin(t * 2) # Scale float
+        logo_size = 280 # Scale logo
         lx = WIDTH * 0.75 + offset_x - logo_size/2
-        ly = HEIGHT/2 - logo_size/2 - 40 + float_y
+        ly = HEIGHT/2 - logo_size/2 - 80 + float_y # Scale Y offset
 
         if alpha > 0:
             g_logo = gemini_img_orig.resize((logo_size, logo_size), Image.Resampling.LANCZOS)
@@ -270,9 +270,9 @@ def make_frame(t):
             frame.paste(g_logo, (int(lx), int(ly)), g_logo)
 
             txt_x = WIDTH * 0.75 + offset_x
-            txt_y = ly + logo_size + 80
+            txt_y = ly + logo_size + 160 # Scale text offset
             draw_text_centered("Gemini", txt_x, txt_y, font_large, (192, 132, 252, alpha))
-            draw_text_centered("GOOGLE DEEPMIND", txt_x, ly + logo_size + 180, font_small, (168, 85, 247, int(180 * eased)))
+            draw_text_centered("GOOGLE DEEPMIND", txt_x, ly + logo_size + 360, font_small, (168, 85, 247, int(180 * eased)))
 
     # --- VS BADGE ---
     vs_start = 1.5
@@ -289,31 +289,33 @@ def make_frame(t):
         alpha_val = int(255 * (progress * 10)) if progress < 0.1 else 255
 
         if alpha_val > 0:
-            badge_img = Image.new("RGBA", (400, 400), (0,0,0,0))
-            slash_img = Image.new("RGBA", (400, 400), (0,0,0,0))
+            badge_size = 800 # Double badge base size for 4k quality
+            badge_img = Image.new("RGBA", (badge_size, badge_size), (0,0,0,0))
+            slash_img = Image.new("RGBA", (badge_size, badge_size), (0,0,0,0))
             slash_draw = ImageDraw.Draw(slash_img)
-            slash_draw.rectangle([0, 150, 400, 250], fill=(255, 255, 255, 25))
-            slash_img = slash_img.rotate(15, center=(200, 200), resample=Image.BICUBIC)
+            slash_draw.rectangle([0, 300, 800, 500], fill=(255, 255, 255, 25)) # Scale rectangle
+            slash_img = slash_img.rotate(15, center=(400, 400), resample=Image.BICUBIC)
             badge_img.paste(slash_img, (0,0), slash_img)
 
             badge_draw = ImageDraw.Draw(badge_img)
             text = "VS"
             bbox = badge_draw.textbbox((0,0), text, font=font_vs)
             tw, th = bbox[2]-bbox[0], bbox[3]-bbox[1]
-            cx, cy = 200, 200
+            cx, cy = 400, 400
 
-            badge_draw.text((cx - tw/2 + 4, cy - th/2 - 20 + 4), text, font=font_vs, fill=(0,0,0,alpha_val))
-            badge_draw.text((cx - tw/2, cy - th/2 - 20), text, font=font_vs, fill=(255,255,255,alpha_val))
+            badge_draw.text((cx - tw/2 + 8, cy - th/2 - 40 + 8), text, font=font_vs, fill=(0,0,0,alpha_val))
+            badge_draw.text((cx - tw/2, cy - th/2 - 40), text, font=font_vs, fill=(255,255,255,alpha_val))
 
-            final_w = int(400 * scale)
-            final_h = int(400 * scale)
+            final_w = int(badge_size * scale)
+            final_h = int(badge_size * scale)
             if final_w > 0 and final_h > 0:
                 badge_scaled = badge_img.resize((final_w, final_h), Image.Resampling.BILINEAR)
                 bx = WIDTH/2 - final_w/2
                 by = HEIGHT/2 - final_h/2
                 frame.paste(badge_scaled, (int(bx), int(by)), badge_scaled)
 
-    return np.array(frame)
+    # Convert back to RGB for moviepy (optional but safe)
+    return np.array(frame.convert("RGB"))
 
 # ==========================================
 # EXECUTION
