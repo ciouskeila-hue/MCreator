@@ -1,0 +1,36 @@
+{
+    "format_version": "1.10.0",
+    "minecraft:client_entity": {
+        "description": {
+            "identifier": "my:muscular_villager",
+            "materials": {
+                "default": "entity_alphatest"
+            },
+            "textures": {
+                "default": "textures/entity/muscular_villager"
+            },
+            "geometry": {
+                "default": "geometry.muscular_villager"
+            },
+            "scripts": {
+                "animate": [
+                    "idle_anim",
+                    {
+                        "walk_anim": "query.modified_move_speed > 0.1"
+                    },
+                    {
+                        "throw_anim": "query.variant == 1"
+                    }
+                ]
+            },
+            "animations": {
+                "idle_anim": "animation.muscular_villager.idle",
+                "walk_anim": "animation.muscular_villager.walk",
+                "throw_anim": "animation.muscular_villager.throw"
+            },
+            "render_controllers": [
+                "controller.render.muscular_villager"
+            ]
+        }
+    }
+}

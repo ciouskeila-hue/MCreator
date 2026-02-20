@@ -1,0 +1,39 @@
+{
+    "format_version": 2,
+    "header": {
+        "name": "Muscular Villager RP",
+        "description": "Resource Pack for Muscular Villager",
+        "uuid": "e24ac4da-f264-465b-b5e1-e194b8ce65d6",
+        "version": [
+            1,
+            0,
+            0
+        ],
+        "min_engine_version": [
+            1,
+            20,
+            0
+        ]
+    },
+    "modules": [
+        {
+            "type": "resources",
+            "uuid": "9afc62a5-951d-4220-887f-5c3aa7ea6b8b",
+            "version": [
+                1,
+                0,
+                0
+            ]
+        }
+    ],
+    "dependencies": [
+        {
+            "uuid": "b2e4c001-a7d3-40cf-9f4a-1065c9f0ac6b",
+            "version": [
+                1,
+                0,
+                0
+            ]
+        }
+    ]
+}

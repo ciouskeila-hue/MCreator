@@ -1,0 +1,121 @@
+{
+    "format_version": "1.19.0",
+    "minecraft:entity": {
+        "description": {
+            "identifier": "my:muscular_villager",
+            "is_spawnable": true,
+            "is_summonable": true,
+            "is_experimental": false
+        },
+        "component_groups": {
+            "my:throwing": {
+                "minecraft:variant": {
+                    "value": 1
+                }
+            },
+            "my:idle": {
+                "minecraft:variant": {
+                    "value": 0
+                }
+            }
+        },
+        "components": {
+            "minecraft:type_family": [
+                "villager",
+                "mob"
+            ],
+            "minecraft:health": {
+                "value": 100,
+                "max": 100
+            },
+            "minecraft:collision_box": {
+                "width": 0.6,
+                "height": 1.9
+            },
+            "minecraft:movement": {
+                "value": 0.3
+            },
+            "minecraft:movement.basic": {},
+            "minecraft:navigation.walk": {
+                "can_path_over_water": true
+            },
+            "minecraft:behavior.random_stroll": {
+                "priority": 6,
+                "speed_multiplier": 1.0
+            },
+            "minecraft:behavior.look_at_player": {
+                "priority": 7,
+                "look_distance": 6.0,
+                "probability": 0.02
+            },
+            "minecraft:physics": {},
+            "minecraft:pushable": {
+                "is_pushable": true,
+                "is_pushable_by_piston": true
+            },
+            "minecraft:interact": {
+                "interactions": [
+                    {
+                        "on_interact": {
+                            "filters": {
+                                "test": "is_family",
+                                "subject": "other",
+                                "value": "player"
+                            },
+                            "event": "my:on_trade"
+                        },
+                        "use_item": false,
+                        "swing": true
+                    }
+                ]
+            },
+            "minecraft:rideable": {
+                "seat_count": 1,
+                "family_types": [
+                    "player"
+                ],
+                "seats": [
+                    {
+                        "position": [
+                            0.0,
+                            2.2,
+                            0.0
+                        ],
+                        "min_rider_count": 0,
+                        "max_rider_count": 1,
+                        "lock_rider_rotation": 0
+                    }
+                ]
+            }
+        },
+        "events": {
+            "my:start_throw": {
+                "add": {
+                    "component_groups": [
+                        "my:throwing"
+                    ]
+                },
+                "remove": {
+                    "component_groups": [
+                        "my:idle"
+                    ]
+                }
+            },
+            "my:stop_throw": {
+                "add": {
+                    "component_groups": [
+                        "my:idle"
+                    ]
+                },
+                "remove": {
+                    "component_groups": [
+                        "my:throwing"
+                    ]
+                }
+            },
+            "my:on_trade": {
+                "trigger": "my:start_throw"
+            }
+        }
+    }
+}
